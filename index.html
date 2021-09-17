@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+    <script src="./abis/ada.js"></script>
+    <script src="./abis/dis.js"></script>
+</head>
+
+<body>
+
+    <center>
+        <h1>ADAMANT interface</h1>
+        <br><br><br>
+        <h2>
+            Total distribution amount => <span id="amount"></span>
+        </h2>
+        <h2>
+            your Ada balance => <span id="balance"></span>
+        </h2>
+        <h2>
+            burn addy balance => <span id="burn"></span>
+        </h2>
+        <h2>
+            Marketing balance => <span id="Maddy"></span>
+        </h2>
+        <input id="blocks" style="width: 200px;" type="text" placeholder="input number of blocks mined">
+        <button onclick="claim()">Claim</button>
+
+    </center>
+
+
+    <script>
+        Number.prototype.noExponents = function() {
+            var data = String(this).split(/[eE]/);
+            if (data.length == 1) return data[0];
+
+            var z = "",
+                sign = this < 0 ? "-" : "",
+                str = data[0].replace(".", ""),
+                mag = Number(data[1]) + 1;
+
+            if (mag < 0) {
+                z = sign + "0.";
+                while (mag++) z += "0";
+                return z + str.replace(/^\-/, "");
+            }
+            mag -= str.length;
+            while (mag--) z += "0";
+            return str + z;
+        };
+
+        console.log('hello')
+
+        var myContract;
+        var accounts;
+        async function CheckMetamaskConnection() {
+            // Modern dapp browsers...
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    // Request account access if needed
+                    await ethereum.enable();
+
+                    accounts = await web3.eth.getAccounts();
+                    console.log("yes");
+                    init();
+                    // Acccounts now exposed
+                    return true;
+                } catch (error) {
+                    // User denied account access...
+                    return false;
+                }
+            }
+            // Legacy dapp browsers...
+            else if (window.web3) {
+                window.web3 = new Web3(web3.currentProvider);
+                // Acccounts always exposed
+                accounts = await web3.eth.getAccounts();
+                console.log("yes");
+                init();
+                return true;
+            }
+            // Non-dapp browsers...
+            else {
+                console.log(
+                    "Non-Ethereum browser detected. You should consider trying MetaMask!"
+                );
+                return false;
+            }
+        }
+
+        CheckMetamaskConnection();
+        ada = new web3.eth.Contract(
+            adaAbi,
+            "0x920B2253363eb95813518bbd726BBcc2754BD9c9"
+        );
+        dis = new web3.eth.Contract(
+            disAbi,
+            "0x61E6FB49aA53e87BB17469a30846e5F72208BC35"
+        );
+
+        const init = async() => {
+            document.getElementById("balance").innerHTML = (
+                (await ada.methods.balanceOf(accounts[0]).call()) / Math.pow(10, 18)
+            ).noExponents();
+            document.getElementById("burn").innerHTML = (
+                (await ada.methods.balanceOf("0x000000000000000000000000000000000000dEaD").call()) / Math.pow(10, 18)
+            ).noExponents();
+            document.getElementById("Maddy").innerHTML = (
+                (await ada.methods.balanceOf("0x43DacA63Af2dF0af230A5497ce319549B1a90ED7").call()) / Math.pow(10, 18)
+            ).noExponents();
+            document.getElementById("amount").innerHTML = (
+                (await ada.methods.balanceOf("0x61E6FB49aA53e87BB17469a30846e5F72208BC35").call()) / Math.pow(10, 18)
+            ).noExponents();
+
+
+
+        }
+
+        const claim = async() => {
+            const value = parseFloat(document.getElementById('blocks').value);
+            console.log(value)
+            await dis.methods.claim(value).send({
+                from: accounts[0]
+            })
+            location.reload();
+        }
+    </script>
+</body>
+
+</html>
