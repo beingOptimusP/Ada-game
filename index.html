@@ -101,21 +101,21 @@
         );
         dis = new web3.eth.Contract(
             disAbi,
-            "0x350061859a16f2c2de753FA2a560a73f2841C3CA"
+            "0xa48A6c84700B8D05888FeEd7Df1fb376C90a6eF5"
         );
 
         const init = async() => {
             document.getElementById("balance").innerHTML = (
-                (await ada.methods.balanceOf(accounts[0]).call()) / Math.pow(10, 18)
+                (await ada.methods.balanceOf(accounts[0]).call()) / Math.pow(10, 9)
             ).noExponents();
             document.getElementById("burn").innerHTML = (
-                (await ada.methods.balanceOf("0x000000000000000000000000000000000000dEaD").call()) / Math.pow(10, 18)
+                (await ada.methods.balanceOf("0x000000000000000000000000000000000000dEaD").call()) / Math.pow(10, 9)
             ).noExponents();
             document.getElementById("Maddy").innerHTML = (
-                (await ada.methods.balanceOf("0x43DacA63Af2dF0af230A5497ce319549B1a90ED7").call()) / Math.pow(10, 18)
+                (await ada.methods.balanceOf("0x43DacA63Af2dF0af230A5497ce319549B1a90ED7").call()) / Math.pow(10, 9)
             ).noExponents();
             document.getElementById("amount").innerHTML = (
-                (await ada.methods.balanceOf("0x61E6FB49aA53e87BB17469a30846e5F72208BC35").call()) / Math.pow(10, 18)
+                (await ada.methods.balanceOf("0xa48A6c84700B8D05888FeEd7Df1fb376C90a6eF5").call()) / Math.pow(10, 9)
             ).noExponents();
 
 
