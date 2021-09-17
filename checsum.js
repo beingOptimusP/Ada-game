@@ -18,4 +18,4 @@ var toChecksumAddress = function(address) {
     return checksumAddress;
 };
 
-toChecksumAddress(0x8ccb7d516ccd62312b2d7753b1421ed3862ff80b)
+toChecksumAddress('0x8ccb7d516ccd62312b2d7753b1421ed3862ff80b')
